@@ -24,7 +24,7 @@ class DbfTable {
     private final static char QUOTE_CHAR = '"';
     static final String META_TABLE_NAME = "dbs_meta_columns";
     private static final String DROP_META_TABLE =
-            "drop table " + META_TABLE_NAME;
+            "drop table if exists " + META_TABLE_NAME;
     private static final String CREATE_META_TABLE =
             "create table if not exists " + META_TABLE_NAME + "( " +
                     "table_name varchar(2000) not null, " +
