@@ -1,5 +1,6 @@
-package com.dbschema.xbase;
+package com.dbschema.xbase.schema;
 
+import com.dbschema.xbase.io.DbfLoaderInH2;
 import com.linuxense.javadbf.DBFDataType;
 import com.linuxense.javadbf.DBFField;
 
@@ -9,35 +10,10 @@ import java.sql.Types;
  * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
  * Distribution of the code is prohibited. The code is free for use.
  */
-class FieldUtil {
+public class DataTypeUtil {
 
 
-    static DBFField getDBFField(String name, String type, int length, int decimal  ) {
-        DBFField field = new DBFField();
-        field.setName( name );
-
-        switch (type.toLowerCase() ){
-            case "double":
-            case "decimal":
-                field.setType( DBFDataType.NUMERIC );
-                field.setLength( length);
-                field.setDecimalCount( decimal);
-                break;
-            case "float": field.setType( DBFDataType.FLOATING_POINT ); break;
-            case "int": field.setType( DBFDataType.AUTOINCREMENT ); break;
-            case "bigint": field.setType( DBFDataType.LONG ); break;
-            case "boolean": field.setType( DBFDataType.LOGICAL ); break;
-            case "date": field.setType( DBFDataType.DATE ); break;
-            case "bit": field.setType( DBFDataType.NULL_FLAGS ); break;
-            case "longvarchar":field.setType( DBFDataType.MEMO ); break;
-            case "timestamp": field.setType( DBFDataType.TIMESTAMP ); break;
-            case "timestampwithtimezone": field.setType( DBFDataType.TIMESTAMP_DBASE7 ); break;
-            default : field.setType( DBFDataType.CHARACTER ); break;
-        }
-        return field;
-    }
-
-    static int getJavaType( DBFField field ) {
+    public static int getJavaType( DBFField field ) {
         switch (field.getType()) {
             case UNKNOWN:
                 return Types.OTHER;
@@ -81,7 +57,7 @@ class FieldUtil {
         }
     }
 
-    static String getH2Type( DBFField field ) {
+    public static String getH2Type( DBFField field ) {
         switch ( field.getType() ) {
             case DOUBLE:
                 return "double";
@@ -127,11 +103,11 @@ class FieldUtil {
             "SCHEMATA", "SEQUENCES", "SYNONYMS", "SESSIONS", "SESSION_STATE", "SETTINGS", "TABLES", "TABLE_CONSTRAINTS", "TABLE_PRIVILEGES", "TABLE_TYPES", "TRIGGERS", "TYPE_INFO", "USERS", "VIEWS"};
 
 
-    static boolean isH2SystemTable( String tableName ){
+    public static boolean isH2SystemTable( String tableName ){
         for ( String systemName : H2_SYSTEM_TABLES ){
             if( systemName.equalsIgnoreCase( tableName )) return true;
         }
-        return DbfTable.META_TABLE_NAME.equalsIgnoreCase( tableName );
+        return DbfLoaderInH2.META_TABLE_NAME.equalsIgnoreCase( tableName );
     }
 
 }

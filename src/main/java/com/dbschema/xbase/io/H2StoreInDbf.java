@@ -1,7 +1,9 @@
-package com.dbschema.xbase;
+package com.dbschema.xbase.io;
 
 
-import com.linuxense.javadbf.DBFField;
+import com.dbschema.xbase.schema.Db;
+import com.dbschema.xbase.schema.DataTypeUtil;
+import com.dbschema.xbase.schema.Table;
 import com.linuxense.javadbf.DBFWriter;
 
 import java.io.File;
@@ -11,44 +13,31 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
+
 import static com.dbschema.xbase.DbfJdbcDriver.LOGGER;
 
 /**
  * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
  * Distribution of the code is prohibited. The code is free for use.
  */
-class DbfStore {
+public class H2StoreInDbf {
 
 
-    private final Map<String,DbfTable> tables = new HashMap<>();
+    public H2StoreInDbf(Connection h2Connection, File outputFolder, String charset ) throws Exception {
 
-
-    private void storeField(String tableName, DBFField field ){
-        if ( tables.containsKey( tableName )){
-            tables.get(tableName).addField( field );
-        } else {
-            DbfTable table = new DbfTable(tableName);
-            table.addField( field );
-            tables.put( tableName, table);
-        }
-    }
-
-    DbfStore(Connection h2Connection, File outputFolder, String charset ) throws Exception {
+        Db db = new Db();
 
         final ResultSet rsColumns = h2Connection.getMetaData().getColumns( null, null, null, null );
         while( rsColumns.next() ){
             String tableName = rsColumns.getString( 3 );
-            if ( !FieldUtil.isH2SystemTable(tableName )) {
+            if ( !DataTypeUtil.isH2SystemTable(tableName )) {
                 String columnName = rsColumns.getString(4);
                 LOGGER.info("Define column " + tableName + "." + columnName);
-                DBFField field = FieldUtil.getDBFField(columnName, rsColumns.getString(6), rsColumns.getInt(7), rsColumns.getInt(9));
-                storeField(tableName, field);
+                db.getOrCreateTable( tableName).createField(columnName, rsColumns.getString(6), rsColumns.getInt(7), rsColumns.getInt(9));
             }
         }
 
-        for ( DbfTable table : tables.values() ){
+        for ( Table table : db.getTables() ){
             final File outputFile = new File( outputFolder.toURI().resolve( table.name + ".dbf"));
             LOGGER.info("Storing " + table + "...");
 

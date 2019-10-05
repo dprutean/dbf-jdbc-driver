@@ -19,10 +19,10 @@ st.execute("save dbf to <folder_path>");
 We save data to a different path, just to avoid any storage issues and don't loose any information.
 We appreciate any contributions to this repository.
 
-# License
+## License
 
-It is forbidden to distribute this code. Code modifications are allowed only in the current repository.
-Free to use for all purposes.
+BSD License-3. Free to use, distribution forbidden. Improvements of the driver accepted only in https://bitbucket.org/dbschema/dbf-jdbc-driver.
+
 
 # JDBC URL
 

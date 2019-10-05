@@ -27,11 +27,9 @@ import java.util.logging.SimpleFormatter;
 public class DbfJdbcDriver implements Driver {
 
     private static final String PREFIX = "jdbc:dbschema:dbf:";
-    private static final String INTERNAL_H2_LOCATION = ".DbSchema/dbf-jdbc-driver/";
+    private static final String INTERNAL_H2_LOCATION = ".DbSchema/jdbc-dbf-h2-data/";
 
-
-    static final Logger LOGGER = Logger.getLogger( DbfJdbcDriver.class.getName() );
-
+    public static final Logger LOGGER = Logger.getLogger( DbfJdbcDriver.class.getName() );
 
     static {
         try {
@@ -40,7 +38,6 @@ public class DbfJdbcDriver implements Driver {
             ex.printStackTrace();
         }
     }
-
 
     @Override
     public Connection connect( String url, Properties info ) throws SQLException {

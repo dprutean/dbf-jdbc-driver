@@ -28,7 +28,7 @@ dependencies {
 jar {
     archiveName ="dbschema-dbf-jdbc${version}.jar"
     manifest {
-        attributes 'Main-Class': 'com.dbschema.dbf.JdbcDriver'
+        attributes 'Main-Class': 'com.dbschema.xbase.DbfJdbcDriver'
         attributes 'Specification-Version': "$version"
         attributes 'Specification-Vendor': "Wise Coders"
         attributes 'Implementation-Vendor-Id': "dbschema.com"
@@ -50,3 +50,37 @@ task copyInUserHome(type: Copy,dependsOn:['clean','jar']) {
     into "${System.getProperty('user.home')}/.DbSchema/drivers/FoxPro/"
 }
 
+plugins {
+    id 'maven-publish'
+}
+
+// https://dzone.com/articles/publish-your-artifacts-to-maven-central
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = 'dBase DBF JDBC Driver'
+                description = 'Open Source JDBC Driver for dBase DBF Database Files'
+                url = 'http://www.dbschema.com'
+                licenses {
+                    license {
+                        name = 'Free to use, Distribution Forbidden'
+                        url = 'http://dbschema.com'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'dprutean'
+                        name = 'Dragos Pruteanu'
+                        email = 'support@dbschema.com'
+                    }
+                }
+                scm {
+                    connection = 'https://github.com/dprutean/dbf-jdbc-driver.git'
+                    developerConnection = 'https://github.com/dprutean/dbf-jdbc-driver.git'
+                    url = 'https://github.com/dprutean/dbf-jdbc-driver.git'
+                }
+            }
+        }
+    }
+}
