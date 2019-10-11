@@ -9,7 +9,9 @@ import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -18,22 +20,30 @@ import java.util.logging.SimpleFormatter;
 
 /**
  * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
- * Distribution of the code is prohibited. The code is free for use.
+ * Licensed under BSD License-3: free to use, distribution forbidden. Improvements accepted only in https://bitbucket.org/dbschema/dbf-jdbc-driver
  *
- * When you open a connection, we store transfer all DBF data to a H2 database stored in user.home.
+ * When you open a connection, we store transfer all DBF data to a H2 database stored in user.home/.DbSchema/ .
  * We also create a proxy on Statement and intercept 'save dbf to folder_path' statements.
  * The dbf save code can be improved, we are happy for contributions.
  */
 public class DbfJdbcDriver implements Driver {
 
     private static final String PREFIX = "jdbc:dbschema:dbf:";
-    private static final String INTERNAL_H2_LOCATION = ".DbSchema/jdbc-dbf-h2-data/";
+    private static final String INTERNAL_H2_LOCATION = ".DbSchema/jdbc-dbf-cache/";
 
     public static final Logger LOGGER = Logger.getLogger( DbfJdbcDriver.class.getName() );
 
     static {
         try {
             DriverManager.registerDriver( new DbfJdbcDriver());
+
+                LOGGER.setLevel(Level.SEVERE);
+                final ConsoleHandler consoleHandler = new ConsoleHandler();
+                consoleHandler.setLevel(Level.FINEST);
+                consoleHandler.setFormatter(new SimpleFormatter());
+
+                LOGGER.setLevel(Level.FINEST);
+                LOGGER.addHandler(consoleHandler);
         } catch ( SQLException ex ){
             ex.printStackTrace();
         }
@@ -68,7 +78,7 @@ public class DbfJdbcDriver implements Driver {
         }
     }
 
-    private HashMap<String, URI> h2Databases = new HashMap<>();
+    private List<String> h2Databases = new ArrayList<>();
 
 
     private Connection getConnection( String databasePath, String defaultCharset ) throws SQLException {
@@ -85,12 +95,12 @@ public class DbfJdbcDriver implements Driver {
         LOGGER.log(Level.INFO, "Create H2 database '" + h2JdbcUrl + "'");
 
         final JdbcConnection h2Connection = (JdbcConnection) (new org.h2.Driver().connect( h2JdbcUrl, new Properties() ));
-        final DbfConnection dbfConnection = new DbfConnection( h2Connection, defaultCharset);
-        if ( !h2Databases.containsKey( h2DbName )){
-                dbfConnection.transferFolder(folder, folder, h2Connection);
-                h2Databases.put(h2DbName, h2DatabasePath);
+        final H2WrappedConnection wrappedConnection = new H2WrappedConnection( h2Connection, defaultCharset);
+        if ( !h2Databases.contains( h2DbName )){
+            wrappedConnection.transferFolder(folder, folder, h2Connection);
+            h2Databases.add(h2DbName);
         }
-        return dbfConnection;
+        return wrappedConnection;
     }
 
 

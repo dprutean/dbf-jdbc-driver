@@ -23,20 +23,20 @@ import static com.dbschema.xbase.DbfJdbcDriver.LOGGER;
 
 /**
  * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
- * Distribution of the code is prohibited. The code is free for use.
+ * Licensed under BSD License-3: free to use, distribution forbidden. Improvements accepted only in https://bitbucket.org/dbschema/dbf-jdbc-driver
  *
- * When you open a connection, we store transfer all DBF data to a H2 database stored in user.home.
+ * When you open a connection, we store transfer all DBF data to a H2 database stored in user.home/.DbSchema/ .
  * We also create a proxy on Statement and intercept 'save dbf to folder_path' statements.
  * The dbf save code can be improved, we are happy for contributions.
  */
-public class DbfConnection implements Connection {
+public class H2WrappedConnection implements Connection {
 
     private static final Pattern SAVE_COMMAND_PATTERN = Pattern.compile( "(\\s*)save(\\s+)dbf(\\s+)to(\\s+)(.*)", Pattern.CASE_INSENSITIVE );
 
     private final JdbcConnection h2Connection;
     private String defaultCharset;
 
-    DbfConnection( JdbcConnection h2Connection, String defaultCharset ){
+    H2WrappedConnection(JdbcConnection h2Connection, String defaultCharset ){
         this.h2Connection = h2Connection;
         this.defaultCharset = defaultCharset;
     }

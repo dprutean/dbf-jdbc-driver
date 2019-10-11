@@ -8,7 +8,7 @@ import java.sql.Types;
 
 /**
  * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
- * Distribution of the code is prohibited. The code is free for use.
+ *  Licensed under BSD License-3: free to use, distribution forbidden. Improvements accepted only in https://bitbucket.org/dbschema/dbf-jdbc-driver
  */
 public class DataTypeUtil {
 

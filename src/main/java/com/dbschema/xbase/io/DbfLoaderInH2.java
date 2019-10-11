@@ -13,6 +13,10 @@ import java.util.logging.Level;
 
 import static com.dbschema.xbase.DbfJdbcDriver.LOGGER;
 
+/**
+ * Copyright DbSchema@Wise Coders GmbH. All rights reserved.
+ *  Licensed under BSD License-3: free to use, distribution forbidden. Improvements accepted only in https://bitbucket.org/dbschema/dbf-jdbc-driver
+ */
 public class DbfLoaderInH2 {
 
     private String insertSql;

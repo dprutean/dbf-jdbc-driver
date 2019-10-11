@@ -1,12 +1,9 @@
 # DBF-JDBC-DRIVER
-DBF-JDBC-DRIVER is a JDBC driver for xBase DBF files.
+DBF-JDBC-DRIVER for xBase DBF files provided by [DbSchema Database Designer](https://dbschema.com)
 
-The code is provided by [DbSchema Database Designer: www.dbschema.com](https://www.dbschema.com) by [Wise Coders GmbH](https://www.wisecoders.com)
 The driver can be tested by downloading and installing DbSchema. 
 There is no need to register or download the driver - DbSchema will do everything for you.
 DbSchema can be tested 15 days for free.
-
-For any question please contact support at dbschema.com
 
 The driver loads all DBF data into an H2 database stored in <user.home>/.DbSchema/dbf-jdbc-driver/
 The data can be modified, any kind of queries can be executed.
@@ -18,6 +15,7 @@ st.execute("save dbf to <folder_path>");
 ```
 We save data to a different path, just to avoid any storage issues and don't loose any information.
 We appreciate any contributions to this repository.
+For any question please contact support at dbschema.com
 
 ## License
 
